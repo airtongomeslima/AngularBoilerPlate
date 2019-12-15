@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiEndpoint: 'https://jsonplaceholder.typicode.com/posts' //Aqui vai o endereço da api de desenvolvimento, normalmente localhost
 };
 
 /*
