@@ -1,55 +1,78 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators';
-import * as helpers from '../helpers/general';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BaseService<T extends helpers.Resource> {
+export class BaseService {
   url: string;
 
-  // Base url
   constructor(
     private httpClient: HttpClient) {
     this.url = environment.apiEndpoint;
   }
 
-
-  public create(item: T, endpoint: string): Observable<T> {
+  public post<ResponseType, SendedType>(item: SendedType, endpoint: string): Observable<ResponseType> {
     return this.httpClient
-      .post<T>(`${this.url}/${endpoint}`, item)
-      .pipe(map(data => data as T));
+      .post<ResponseType>(`${this.url}/${endpoint}`, item)
+      .pipe(map((data: any) => {
+        const result = data as ResponseType;
+        return result;
+      }));
   }
 
-  public update(item: T, endpoint: string): Observable<T> {
+  public put<ResponseType, SendedType>(item: SendedType, endpoint: string, id: number): Observable<ResponseType> {
     return this.httpClient
-      .put<T>(`${this.url}/${endpoint}/${item.id}`,
+      .put<ResponseType>(`${this.url}/${endpoint}/${id}`,
         item)
-      .pipe(map(data => data as T));
+      .pipe(map((data: any) => {
+        const result = data as ResponseType;
+        return result;
+      }));
   }
 
-  read(id: number, endpoint: string): Observable<T> {
-    return this.httpClient
-      .get(`${this.url}/${endpoint}/${id}`)
-      .pipe(map((data: any) => data as T));
-  }
-
-  list(queryOptions: helpers.QueryOptions, endpoint: string): Observable<T[]> {
+  public get<ResponseType>(queryOptions: string, endpoint: string): Observable<ResponseType> {
     let address = `${this.url}/${endpoint}`;
     if (queryOptions) {
-      address += `?${queryOptions.toQueryString()}`;
+      address += `?${queryOptions}`;
     }
 
     return this.httpClient
       .get(address)
-      .pipe(map((data: any) => data as T[]));
+      .pipe(map((data: any) => {
+        const result = data as ResponseType;
+        return result;
+      }));
   }
 
-  delete(id: number, endpoint: string) {
+  public getList<ResponseType>(queryOptions: string, endpoint: string): Observable<ResponseType[]> {
+    let address = `${this.url}/${endpoint}`;
+    if (queryOptions) {
+      address += `?${queryOptions}`;
+    }
+
     return this.httpClient
-      .delete(`${this.url}/${endpoint}/${id}`);
+      .get(address)
+      .pipe(map((data: any) => {
+        const result = data as ResponseType[];
+        return result;
+      }));
+  }
+
+  delete<ResponseType>(endpointOptions: string, endpoint: string): Observable<ResponseType> {
+    let address = `${this.url}/${endpoint}`;
+    if (endpointOptions) {
+      address += `${endpointOptions}`;
+    }
+
+    return this.httpClient
+      .delete(address)
+      .pipe(map((data: any) => {
+        const result = data as ResponseType;
+        return result;
+      }));
   }
 }

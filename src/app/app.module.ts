@@ -7,7 +7,10 @@ import { PaginaComponent } from './pages/pagina/pagina.component';
 import { PaginaLogadaComponent } from './pages/pagina-logada/pagina-logada.component';
 import { HomeComponent } from './pages/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
-import { PostComponent } from './components/post/post.component';
+import { UserComponent } from './components/user/user.component';
+import { UserEditorComponent } from './components/user-editor/user-editor.component';
+import { InputComponent } from './components/input/input.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,12 +18,15 @@ import { PostComponent } from './components/post/post.component';
     PaginaComponent,
     PaginaLogadaComponent,
     HomeComponent,
-    PostComponent
+    UserComponent,
+    UserEditorComponent,
+    InputComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
